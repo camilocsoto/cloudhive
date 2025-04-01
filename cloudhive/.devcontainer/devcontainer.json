@@ -1,0 +1,17 @@
+{
+    "$schema": "https://raw.githubusercontent.com/devcontainers/devcontainer-spec/main/src/schema.json",
+    "name": "Django devcontainer",
+    "dockerComposeFile": [
+      "../docker-compose.yml"
+    ],
+    "service": "django-web",
+    "workspaceFolder": "/usr/src/app",
+    "shutdownAction": "stopCompose",
+    "extensions": [
+      "ms-python.python",
+      "ms-azuretools.vscode-docker"
+    ],
+    "settings": {
+      "python.pythonPath": "/opt/venv/bin/python"
+    }
+  }
