@@ -6,7 +6,7 @@ Se ha puesto a disposición una guía paso a paso para ejecutar el proyecto en s
 
 A continuación, encontrará el enlace a la guía detallada:  
 
-[django-dash.pdf](./cloudhive/.devcontainer/assets/django-dash.pdf)
+[django-dash.pdf](https://workdrive.zohoexternal.com/external/b0466ef3ef8f091597c3331cd3b62c01d2fe6c3f6af10b9253bf662fe4cb703e)
 
 #### otros comandos útiles:  
  
