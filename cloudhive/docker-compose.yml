@@ -1,0 +1,15 @@
+services:
+ cloudhive-app:
+   build: .
+   container_name: docker-django
+   ports:
+     - "8282:8282"
+   volumes:
+     - ./:/usr/src/app
+   environment:
+     DJANGO_SECRET_KEY: ${SECRET_KEY}
+     DEBUG: ${DEBUG}
+     DJANGO_LOGLEVEL: ${DJANGO_LOGLEVEL}
+     DJANGO_ALLOWED_HOSTS: ${ALLOWED_HOSTS}
+   env_file:
+     - .env
