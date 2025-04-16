@@ -1,8 +1,8 @@
 """
-URL configuration for gas-dash project.
+URL configuration for cloudhive project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.1/topics/http/urls/
+    https://docs.djangoproject.com/en/5.2/topics/http/urls/
 Examples:
 Function views
     1. Add an import:  from my_app import views
@@ -15,13 +15,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
-from .views import *
-from .Forms import *
+from .views import CustomLoginView, UserView, SignUpView
+
+
 urlpatterns = [
-    path('login/', login_view, name='login'),
-    path('register/', register_view, name='register'),
-    path('recovery/<int:id>', UserView.as_view() ),
-    path('admin/<int:id>', UserView.as_view() ),
-    path('waiter/<int:id>', UserView.as_view() ),
-    path('cashier/<int:id>', UserView.as_view() ),
+    path('login/', CustomLoginView.as_view(), name = "login"),
+    path('signup/', SignUpView.as_view(), name = "signup"),
+    path('prueba/', UserView.as_view(), name = "user_view"),
 ]
