@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles de Usuario</title>
+    <style>
+        .user-details {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        .detail-item {
+            margin: 10px 0;
+            padding: 8px;
+            background-color: white;
+            border-radius: 4px;
+        }
+        .detail-label {
+            font-weight: bold;
+            color: #333;
+        }
+        .btn-logout {
+            background-color: #ff4444;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .btn-logout:hover {
+            background-color: #cc0000;
+        }
+    </style>
+</head>
+<body>
+    <div class="user-details">
+        <h2>Detalles del Usuario</h2>
+
+        <div class="detail-item">
+            <span class="detail-label">Nombre:</span>
+            {{ user.nombres }} {{ user.apellidos }}
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Email:</span>
+            {{ user.correo }}
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Rol:</span>
+            {{ user.get_rol_display }}
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">cookie de sesión:</span>
+            {% if user.is_authenticated %}
+                {{ request.session.session_key }}  <!-- Muestra el session key -->
+            {% else %}
+                No autenticado
+            {% endif %}
+        </div>
+
+        <div class="logout-section">
+            <!-- Botón de cerrar sesión -->
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-logout">Cerrar sesión</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
