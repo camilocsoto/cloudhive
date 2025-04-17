@@ -23,6 +23,18 @@
             font-weight: bold;
             color: #333;
         }
+        .btn-logout {
+            background-color: #ff4444;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .btn-logout:hover {
+            background-color: #cc0000;
+        }
     </style>
 </head>
 <body>
@@ -31,17 +43,34 @@
 
         <div class="detail-item">
             <span class="detail-label">Nombre:</span>
-            {{ userv.name }}
+            {{ user.nombres }} {{ user.apellidos }}
         </div>
 
         <div class="detail-item">
             <span class="detail-label">Email:</span>
-            {{ userv.email }}
+            {{ user.correo }}
         </div>
 
         <div class="detail-item">
             <span class="detail-label">Rol:</span>
-            {{ userv.rol }}
+            {{ user.get_rol_display }}
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">cookie de sesión:</span>
+            {% if user.is_authenticated %}
+                {{ request.session.session_key }}  <!-- Muestra el session key -->
+            {% else %}
+                No autenticado
+            {% endif %}
+        </div>
+
+        <div class="logout-section">
+            <!-- Botón de cerrar sesión -->
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-logout">Cerrar sesión</button>
+            </form>
         </div>
     </div>
 </body>
