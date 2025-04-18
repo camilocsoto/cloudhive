@@ -1,77 +1,49 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalles de Usuario</title>
-    <style>
-        .user-details {
-            max-width: 600px;
-            margin: 2rem auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-        }
-        .detail-item {
-            margin: 10px 0;
-            padding: 8px;
-            background-color: white;
-            border-radius: 4px;
-        }
-        .detail-label {
-            font-weight: bold;
-            color: #333;
-        }
-        .btn-logout {
-            background-color: #ff4444;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-        .btn-logout:hover {
-            background-color: #cc0000;
-        }
-    </style>
-</head>
-<body>
-    <div class="user-details">
-        <h2>Detalles del Usuario</h2>
+{% extends "base.html" %}
 
-        <div class="detail-item">
-            <span class="detail-label">Nombre:</span>
-            {{ user.nombres }} {{ user.apellidos }}
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white rounded-xl shadow-sm p-8 mt-8">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-4">Detalles del Usuario</h2>
+
+    <div class="space-y-4">
+        <!-- Item Detalle -->
+        <div class="flex items-center justify-between border-b pb-3">
+            <span class="text-gray-600 font-medium">Nombre:</span>
+            <span class="text-gray-800">{{ user.nombres }} {{ user.apellidos }}</span>
         </div>
 
-        <div class="detail-item">
-            <span class="detail-label">Email:</span>
-            {{ user.correo }}
+        <!-- Item Detalle -->
+        <div class="flex items-center justify-between border-b pb-3">
+            <span class="text-gray-600 font-medium">Email:</span>
+            <span class="text-gray-800 break-all">{{ user.correo }}</span>
         </div>
 
-        <div class="detail-item">
-            <span class="detail-label">Rol:</span>
-            {{ user.get_rol_display }}
+        <!-- Item Detalle -->
+        <div class="flex items-center justify-between border-b pb-3">
+            <span class="text-gray-600 font-medium">Rol:</span>
+            <span class="text-gray-800">{{ user.get_rol_display }}</span>
         </div>
 
-        <div class="detail-item">
-            <span class="detail-label">cookie de sesión:</span>
-            {% if user.is_authenticated %}
-                {{ request.session.session_key }}  <!-- Muestra el session key -->
-            {% else %}
-                No autenticado
-            {% endif %}
-        </div>
-
-        <div class="logout-section">
-            <!-- Botón de cerrar sesión -->
-            <form method="post" action="{% url 'logout' %}">
-                {% csrf_token %}
-                <button type="submit" class="btn-logout">Cerrar sesión</button>
-            </form>
+        <!-- Item Detalle -->
+        <div class="flex items-center justify-between border-b pb-3">
+            <span class="text-gray-600 font-medium">Sesión:</span>
+            <span class="text-gray-800 text-sm">
+                {% if user.is_authenticated %}
+                    {{ request.session.session_key|truncatechars:20 }}
+                {% else %}
+                    <span class="text-red-500">No autenticado</span>
+                {% endif %}
+            </span>
         </div>
     </div>
-</body>
-</html>
+
+    <!-- Sección Logout -->
+    <div class="mt-8 pt-6 border-t">
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200">
+                Cerrar sesión
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
