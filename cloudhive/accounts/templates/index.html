@@ -1,49 +1,47 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="max-w-2xl mx-auto bg-white rounded-xl shadow-sm p-8 mt-8">
-    <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-4">Detalles del Usuario</h2>
-
-    <div class="space-y-4">
-        <!-- Item Detalle -->
-        <div class="flex items-center justify-between border-b pb-3">
-            <span class="text-gray-600 font-medium">Nombre:</span>
-            <span class="text-gray-800">{{ user.nombres }} {{ user.apellidos }}</span>
-        </div>
-
-        <!-- Item Detalle -->
-        <div class="flex items-center justify-between border-b pb-3">
-            <span class="text-gray-600 font-medium">Email:</span>
-            <span class="text-gray-800 break-all">{{ user.correo }}</span>
-        </div>
-
-        <!-- Item Detalle -->
-        <div class="flex items-center justify-between border-b pb-3">
-            <span class="text-gray-600 font-medium">Rol:</span>
-            <span class="text-gray-800">{{ user.get_rol_display }}</span>
-        </div>
-
-        <!-- Item Detalle -->
-        <div class="flex items-center justify-between border-b pb-3">
-            <span class="text-gray-600 font-medium">Sesión:</span>
-            <span class="text-gray-800 text-sm">
-                {% if user.is_authenticated %}
-                    {{ request.session.session_key|truncatechars:20 }}
-                {% else %}
-                    <span class="text-red-500">No autenticado</span>
-                {% endif %}
-            </span>
-        </div>
+<div class="container mt-5">
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h2 class="card-title mb-4">Detalles del Usuario</h2>
+      <ul class="list-group list-group-flush">
+        <!-- Nombre -->
+        <li class="list-group-item d-flex justify-content-between">
+          <span class="text-secondary">Nombre:</span>
+          <span class="text-body">{{ user.nombres }} {{ user.apellidos }}</span>
+        </li>
+        <!-- Email -->
+        <li class="list-group-item d-flex justify-content-between">
+          <span class="text-secondary">Email:</span>
+          <span class="text-body text-break">{{ user.correo }}</span>
+        </li>
+        <!-- Rol -->
+        <li class="list-group-item d-flex justify-content-between">
+          <span class="text-secondary">Rol:</span>
+          <span class="text-body">{{ user.get_rol_display }}</span>
+        </li>
+        <!-- Sesión -->
+        <li class="list-group-item d-flex justify-content-between">
+          <span class="text-secondary">Sesión:</span>
+          <span class="text-body small">
+            {% if user.is_authenticated %}
+              {{ request.session.session_key|truncatechars:20 }}
+            {% else %}
+              <span class="text-danger">No autenticado</span>
+            {% endif %}
+          </span>
+        </li>
+      </ul>
     </div>
-
-    <!-- Sección Logout -->
-    <div class="mt-8 pt-6 border-t">
-        <form method="post" action="{% url 'logout' %}">
-            {% csrf_token %}
-            <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200">
-                Cerrar sesión
-            </button>
-        </form>
+    <div class="card-footer bg-white border-0">
+      <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger w-100">
+          Cerrar sesión
+        </button>
+      </form>
     </div>
+  </div>
 </div>
 {% endblock %}
