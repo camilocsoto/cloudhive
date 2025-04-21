@@ -10,6 +10,9 @@ A continuación, encontrará el enlace a la guía detallada:
 
 Posteriormente, debe ejecutar el comando: `docker-compose exec django-web python manage.py migrate` para activar todos los servicios de django.
 
+![alt func](https://developer.mozilla.org/es/docs/Learn_web_development/Extensions/Server-side/Django/Home_page/basic-django.png)
+
+
 #### otros comandos útiles:  
  
 - **Crear otra app:** `docker-compose exec django-web python manage.py startapp __name_your_app__`  
