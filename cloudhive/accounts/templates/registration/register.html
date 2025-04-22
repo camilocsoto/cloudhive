@@ -1,15 +1,35 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Registro de Usuario</title>
-</head>
-<body>
-    <h1>Registro de nuevo usuario</h1>
-    
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}      
-        <button type="submit">Registrar</button>
+{% extends 'base.html' %}
+{% load crispy_forms_tags static %}
+
+{% block title %}Registro – El rincón del trago{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="card login-card shadow-lg p-4" style="max-width: 420px; width: 100%;">
+    <div class="text-center mb-4">
+      <img
+        src="{% static 'images/logo.webp' %}"
+        alt="El rincón del trago"
+        class="login-logo img-fluid"
+      >
+      <h3 class="mt-2">Crea tu cuenta</h3>
+      <p class="text-muted small">Regístrate para empezar a usar el sistema</p>
+    </div>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {{ form|crispy }}
+      <button type="submit" class="btn btn-primary w-100 mt-3">
+        Registrar
+      </button>
     </form>
-</body>
-</html>
+
+    <div class="text-center mt-3">
+      <span class="small">¿Ya tienes cuenta?</span>
+      <a href="{% url 'login' %}" class="text-decoration-none fw-medium">
+        Inicia sesión
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,43 +1,33 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sesión cerrada</title>
-    <style>
-        .user-details {
-            max-width: 600px;
-            margin: 2rem auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-        }
-        .detail-item {
-            margin: 10px 0;
-            padding: 8px;
-            background-color: white;
-            border-radius: 4px;
-        }
-        .detail-label {
-            font-weight: bold;
-            color: #333;
-        }
-    </style>
-</head>
-<body>
-    <div class="user-details">
-        <h2>Gracias por habernos visitado.</h2>
-        <div class="detail-item">
-            <span class="detail-label">Su sesión ha sido cerrada correctamente.</span>
-        </div>
+{% extends "base.html" %}
+{% load static %}
 
-        <div class="detail-item">
-            <span class="detail-label">Si desea volver a ingresar, por favor haga clic en el siguiente enlace:</span>
-            <br>
-            <a href="{% url 'login' %}">Iniciar sesión</a>
-        </div>
+{% block title %}Hasta pronto – El rincón del trago{% endblock %}
 
+{% block content %}
+  {# Estilos específicos para esta vista #}
+  <style>
+    .logout-bg {
+      /* URL de tu imagen de fondo; tamaño recomendado: 1920×1080px */
+      background: url("{% static 'images/logout-bg.webp' %}") no-repeat center center;
+      background-size: cover;
+      min-height: 100vh;
+    }
+    .logout-card {
+      max-width: 480px;
+      width: 90%;
+      border-radius: 1rem;
+    }
+  </style>
+
+  <div class="logout-bg d-flex justify-content-center align-items-center">
+    <div class="card logout-card bg-white bg-opacity-75 p-4 shadow">
+      <h2 class="mb-3 text-center">Gracias por habernos visitado</h2>
+      <p class="lead text-center">Tu sesión ha sido cerrada correctamente.</p>
+      <div class="text-center mt-4">
+        <a href="{% url 'login' %}" class="btn btn-primary btn-lg">
+          Iniciar sesión de nuevo
+        </a>
+      </div>
     </div>
-</body>
-</html>
+  </div>
+{% endblock %}
