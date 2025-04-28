@@ -42,7 +42,9 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'accounts',
-    'cajero'
+    'cajero',
+    'mesero',
+    'admin'
 ]
 
 AUTH_USER_MODEL = 'accounts.Usuario'
