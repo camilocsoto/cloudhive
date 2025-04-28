@@ -10,5 +10,3 @@ def producto_json(request):
     }
     # Pasamos al contexto
     return render(request, "producto.html", {"producto": producto})
-
-#Para entrar a la página ejecuta http://127.0.0.1:8000/mesero/producto/

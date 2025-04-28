@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'accounts',
     'cajero',
     'mesero',
-    'admin'
+    'adminis',
 ]
 
 AUTH_USER_MODEL = 'accounts.Usuario'
