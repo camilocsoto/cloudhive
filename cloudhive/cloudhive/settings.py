@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'accounts',
-    'categoria'
+    'categoria',
+    'paginas'
 ]
 
 AUTH_USER_MODEL = 'accounts.Usuario'
@@ -130,6 +131,7 @@ STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [ # add to operate the dasboard's template
     BASE_DIR / 'templates' / 'static',
+    
 ]
 
 # Default primary key field type
