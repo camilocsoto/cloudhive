@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center">Bienvenido a CloudHive</h1>
+    <p class="text-center">Esta es la página principal del sistema.</p>
+    <div class="text-center">
+        <a href="{% url 'lista_categorias' %}" class="btn btn-primary mt-3">Ir a Categorías</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+# stage 1: base image
+FROM python:3.12.9-alpine3.21 AS base_image
+# Se define una variable opcional
+RUN python3 -m venv /opt/venv
+# Se sobreescribe la variable path para que tenga prioridad los comandos del ambiente
+ENV PATH="/opt/venv/bin:$PATH"
+# Se copia unicamente el archivo de dependencias 
+COPY requirements.txt /requirements.txt
+# Se instalan las dependencias.
+RUN pip install --no-cache-dir -r requirements.txt
+
+# stage 2: prod image
+FROM python:3.12.9-alpine3.21 AS build_image
+# instala
+RUN apk update && apk add --no-cache python3-dev gcc musl-dev
+# Se copia la carpeta venv que contiene todas las dependencias en el segundo contenedor
+COPY --from=base_image /opt/venv /opt/venv
+# Se copia la aplicación
+COPY . /usr/src/app
+# Se establece por defecto el directorio 
+WORKDIR /usr/src/app
+# Se agrega el directorio a las variables de ambiente.
+ENV PATH="/opt/venv/bin:$PATH" PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 
+# Expose the Django port
+EXPOSE 8282
+# Run Django’s development server
+CMD ["gunicorn", "--bind", "0.0.0.0:8282", "--workers", "3", "cloudhive.wsgi:application"]
+
+

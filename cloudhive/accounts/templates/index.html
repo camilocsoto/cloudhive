@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h2 class="card-title mb-4">Detalles del Usuario</h2>
+      <ul class="list-group list-group-flush">
+        <!-- Nombre -->
+        <li class="list-group-item d-flex justify-content-between">
+          <span class="text-secondary">Nombre:</span>
+          <span class="text-body">{{ user.nombres }} {{ user.apellidos }}</span>
+        </li>
+        <!-- Email -->
+        <li class="list-group-item d-flex justify-content-between">
+          <span class="text-secondary">Email:</span>
+          <span class="text-body text-break">{{ user.correo }}</span>
+        </li>
+        <!-- Rol -->
+        <li class="list-group-item d-flex justify-content-between">
+          <span class="text-secondary">Rol:</span>
+          <span class="text-body">{{ user.get_rol_display }}</span>
+        </li>
+        <!-- Sesión -->
+        <li class="list-group-item d-flex justify-content-between">
+          <span class="text-secondary">Sesión:</span>
+          <span class="text-body small">
+            {% if user.is_authenticated %}
+              {{ request.session.session_key|truncatechars:20 }}
+            {% else %}
+              <span class="text-danger">No autenticado</span>
+            {% endif %}
+          </span>
+        </li>
+      </ul>
+    </div>
+    <div class="card-footer bg-white border-0">
+      <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger w-100">
+          Cerrar sesión
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

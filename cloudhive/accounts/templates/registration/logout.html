@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Hasta pronto – El rincón del trago{% endblock %}
+
+{% block content %}
+  {# Estilos específicos para esta vista #}
+  <style>
+    .logout-bg {
+      /* URL de tu imagen de fondo; tamaño recomendado: 1920×1080px */
+      background: url("{% static 'images/logout-bg.webp' %}") no-repeat center center;
+      background-size: cover;
+      min-height: 100vh;
+    }
+    .logout-card {
+      max-width: 480px;
+      width: 90%;
+      border-radius: 1rem;
+    }
+  </style>
+
+  <div class="logout-bg d-flex justify-content-center align-items-center">
+    <div class="card logout-card bg-white bg-opacity-75 p-4 shadow">
+      <h2 class="mb-3 text-center">Gracias por habernos visitado</h2>
+      <p class="lead text-center">Tu sesión ha sido cerrada correctamente.</p>
+      <div class="text-center mt-4">
+        <a href="{% url 'login' %}" class="btn btn-primary btn-lg">
+          Iniciar sesión de nuevo
+        </a>
+      </div>
+    </div>
+  </div>
+{% endblock %}
