@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags static %}
+
+{% block title %}Lista de Categorías{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Lista de Categorías</h1>
+
+    <div class="mb-3">
+        <a href="{% url 'cajero:crear_categoria' %}" class="btn btn-primary">Crear Nueva Categoría</a>
+    </div>
+
+    <ul class="list-group">
+        {% for categoria in categorias %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ categoria.nombre }}
+                <div>
+                    <a href="{% url 'cajero:editar_categoria' categoria.idCategoria %}" class="btn btn-sm btn-warning">Editar</a>
+
+                    <!-- Botón para abrir el modal -->
+                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar{{ categoria.idCategoria }}">
+                        Eliminar
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="modalEliminar{{ categoria.idCategoria }}" tabindex="-1" aria-labelledby="modalEliminarLabel{{ categoria.idCategoria }}" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="modalEliminarLabel{{ categoria.idCategoria }}">Confirmar Eliminación</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                          </div>
+                          <div class="modal-body">
+                            ¿Estás seguro de que quieres eliminar la categoría "<strong>{{ categoria.nombre }}</strong>"?
+                          </div>
+                          <div class="modal-footer">
+                            <form method="post" action="{% url 'cajero:eliminar_categoria' categoria.idCategoria %}">
+                                {% csrf_token %}
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                </div>
+            </li>
+        {% empty %}
+            <li class="list-group-item">No hay categorías disponibles.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

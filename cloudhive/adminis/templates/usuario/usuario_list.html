@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <div class="row">
+    <!-- Sidebar de administración -->
+    <nav class="col-12 col-md-3 mb-4 mb-md-0">
+      <div class="list-group">
+        <span class="list-group-item list-group-item-action active">
+          Panel de administración
+        </span>
+        <a href="{% url 'adminis:list_usuario' %}" class="list-group-item list-group-item-action">
+          Administrar usuario
+        </a>
+        <a href="{% url 'adminis:list_sede' %}" class="list-group-item list-group-item-action">
+          Administrar sede
+        </a>
+        <a href="{% url 'adminis:list_ciudad' %}" class="list-group-item list-group-item-action">
+          Administrar ciudad
+        </a>
+        <a href="{% url 'adminis:list_pais' %}" class="list-group-item list-group-item-action">
+          Administrar país
+        </a>
+      </div>
+    </nav>
+
+    <!-- Contenido principal -->
+    <div class="col-12 col-md-9">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3">Listado de Usuarios</h1>
+        <a href="{% url 'adminis:create_usuario' %}" class="btn btn-primary">
+          + Nuevo Usuario
+        </a>
+      </div>
+      <table class="table table-striped table-hover">
+        <thead class="table-light">
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Documento</th>
+            <th>Correo</th>
+            <th>Rol</th>
+            <th>Estado</th>
+            <th>Sede</th>
+            <th class="text-end">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for usuario in usuarios %}
+          <tr>
+            <td>{{ usuario.pk }}</td>
+            <td>
+              <a href="{% url 'adminis:update_usuario' usuario.pk %}">
+                {{ usuario.nombres }} {{ usuario.apellidos }}
+              </a>
+            </td>
+            <td>{{ usuario.tipoDocumento }} - {{ usuario.numDocumento }}</td>
+            <td>{{ usuario.correo }}</td>
+            <td>{{ usuario.get_rol_display }}</td>
+            <td>{{ usuario.get_estado_display }}</td>
+            <td>
+              {% if usuario.sede %}
+                {{ usuario.sede.nombre }}
+              {% else %}
+                &mdash;
+              {% endif %}
+            </td>
+            <td class="text-end">
+              <a href="{% url 'adminis:update_usuario' usuario.pk %}" class="btn btn-sm btn-outline-secondary">Editar</a>
+              <a href="{% url 'adminis:delete_usuario' usuario.pk %}" class="btn btn-sm btn-outline-danger">Eliminar</a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="8" class="text-center">No hay usuarios registrados.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

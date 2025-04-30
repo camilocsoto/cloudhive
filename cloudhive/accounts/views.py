@@ -24,8 +24,15 @@ class CustomLoginView(LoginView):
     form_class = LoginForm
     template_name = "registration/login.html"
     def get_success_url(self):
-        # redirigir al módulo del usuario
-        return reverse_lazy("user_view")
+        user = self.request.user
+        # redirige a la vista correspondiente según el rol del usuario
+        if user.rol == 1:
+            return reverse_lazy('adminis:list_sede')
+        elif user.rol == 2:
+            return reverse_lazy('cajero:lista_categorias')
+        elif user.rol == 3:
+            return reverse_lazy('user_view')
+        return super().get_success_url()
 
 class CustomLogoutView(LogoutView):
     # cerrar sesión

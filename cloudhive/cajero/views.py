@@ -1,14 +1,43 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Categoria
+from .forms.categoria_form import CategoriaForm
+# home/views.py
+from django.views.generic import TemplateView
 
-# Create your views here.
+def lista_categorias(request):
+    categorias = Categoria.objects.all()
+    return render(request, 'lista.html', {'categorias': categorias})
 
-# Create your views here.
-def producto_json(request):
-    producto = {
-        "nombre": "Botella de vino",
-        "precio": 15.99
-    }
-    # Pasamos al contexto
-    return render(request, "producto.html", {"producto": producto})
+def crear_categoria(request):
+    if request.method == 'POST':
+        form = CategoriaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('cajero:lista_categorias')    # <- aquí
+    else:
+        form = CategoriaForm()
+    return render(request, 'formulario.html', {'form': form})
 
-#Para entrar a la página ejecuta http://127.0.0.1:8000/cajero/producto/
+def editar_categoria(request, idCategoria):
+    categoria = get_object_or_404(Categoria, idCategoria=idCategoria)
+    if request.method == 'POST':
+        form = CategoriaForm(request.POST, instance=categoria)
+        if form.is_valid():
+            form.save()
+            return redirect('cajero:lista_categorias')    # <- y aquí
+    else:
+        form = CategoriaForm(instance=categoria)
+    return render(request, 'formulario.html', {'form': form})
+
+def eliminar_categoria(request, idCategoria):
+    categoria = get_object_or_404(Categoria, idCategoria=idCategoria)
+    if request.method == 'POST':
+        categoria.delete()
+        return redirect('cajero:lista_categorias')    # <- y aquí
+    return render(request, 'confirmar_eliminar.html', {'categoria': categoria})
+
+# Vista para root
+# home/views.py
+
+class HomeView(TemplateView):
+    template_name = "inicio.html"

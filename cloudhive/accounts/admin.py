@@ -23,7 +23,7 @@ class UsuarioAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
     model = Usuario
-    list_display = ('correo', 'nombres', 'apellidos', 'tipoDocumento', 'numDocumento', 'rol', 'estado', 'is_staff')
+    list_display = ('correo', 'nombres', 'apellidos', 'tipoDocumento', 'numDocumento', 'rol', 'estado', 'is_staff', 'sede')
     list_filter = ('rol', 'estado', 'is_staff')
     
     # Configuración de los campos al editar un usuario.
@@ -38,7 +38,7 @@ class UsuarioAdmin(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('username', 'correo', 'nombres', 'apellidos', 'tipoDocumento', 'numDocumento', 'rol', 'estado', 'password1', 'password2'),
+            'fields': ('username', 'correo', 'nombres', 'apellidos', 'tipoDocumento', 'numDocumento', 'rol', 'estado', 'password1', 'password2','sede'),
         }),
     )
     

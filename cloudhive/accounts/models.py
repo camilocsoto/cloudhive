@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from adminis.models import Sede
 
 class Usuario(AbstractUser):
     
@@ -11,8 +12,8 @@ class Usuario(AbstractUser):
     )
     ROLES = (
         (1, 'Admin'),
-        (2, 'mesero'),
-        (3, 'cajero'),
+        (2, 'cajero'),
+        (3, 'mesero'),
     )
     ESTADO = (
         (0, 'inactivo'),
@@ -26,8 +27,16 @@ class Usuario(AbstractUser):
     correo = models.EmailField(max_length=100, unique=True, verbose_name='Correo electrónico')
     # 'password' ya existe en AbstractUser
     rol = models.IntegerField(choices=ROLES, default=3)
-    estado = models.IntegerField(choices=ESTADO, default=1)
-
+    estado = models.IntegerField(choices=ESTADO, default=0)
+    # Nueva relación opcional a Sede
+    sede = models.ForeignKey(
+        Sede,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='usuarios',
+        verbose_name='Sede asignada'
+    )
 
     # Django por defecto en AbstractUser ya tiene campos: username, password, first_name, last_name, email, is_staff, is_active, is_superuser, etc.
     # para usar en la creación de superusuarios

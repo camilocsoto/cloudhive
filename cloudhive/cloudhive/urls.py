@@ -16,8 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-
+from cajero.views import HomeView
 urlpatterns = [
+    path("", HomeView.as_view(), name="home"),   # <— ruta root
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
     path('cajero/', include('cajero.urls')),
