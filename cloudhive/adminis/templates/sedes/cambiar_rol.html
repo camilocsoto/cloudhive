@@ -1,28 +1,48 @@
 {% extends "base.html" %}
-
 {% block content %}
 <div class="container py-5">
-  <h2 class="text-center mb-4">Change of Role</h2>
-  <form method="post" class="row justify-content-center">
+  <!-- Detalles de la sede -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <h2 class="card-title">Cambio de rol en la sede <strong>{{ sedes.nombre }}</strong></h2>
+      <p class="mb-1"><strong>Ciudad:</strong> {{ sedes.Ciudad.nombre }}</p>
+      <p class="mb-0"><strong>Estado:</strong> {{ sedes.get_estado_display }}</p>
+    </div>
+  </div>
+
+  <!-- Detalles del usuario -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <h3 class="card-subtitle mb-3">Usuario actual</h3>
+      <p class="mb-1"><strong>Nombre:</strong> {{ usuario.nombres }} {{ usuario.apellidos }}</p>
+      <p class="mb-1"><strong>Correo:</strong> {{ usuario.correo }}</p>
+      <p class="mb-1"><strong>Documento:</strong> {{ usuario.tipoDocumento }} - {{ usuario.numDocumento }}</p>
+      <p class="mb-0">
+        <strong>Sede asignada:</strong>
+        {% if usuario.sedes %}
+          {{ usuario.sedes.nombre }}
+        {% else %}
+          — Sin sede —
+        {% endif %}
+      </p>
+      <p class="mb-1"><strong>PENDIENTE:</strong> Lógica para crear las mesas</p>
+    </div>
+  </div>
+
+
+  <!-- Formulario de cambio de rol -->
+  <form method="post" action="{% url 'adminis:update_user_rol' sedes.pk %}" class="row justify-content-center">
     {% csrf_token %}
     <div class="col-6 col-md-4 d-flex justify-content-around mb-4">
-      <label class="text-center">
-        <input type="radio" name="role" value="2" class="d-none" required>
-        <div class="p-3 border rounded-circle">
-          <i class="bi bi-person-fill fs-1"></i>
-        </div>
-        <div>Cajero</div>
-      </label>
-      <label class="text-center">
-        <input type="radio" name="role" value="3" class="d-none" required>
-        <div class="p-3 border rounded-circle">
-          <i class="bi bi-person-circle fs-1"></i>
-        </div>
-        <div>Mesero</div>
-      </label>
+      <button name="new_role" value="2" class="btn btn-outline-primary">
+        Ir a Cajero
+      </button>
+      <button name="new_role" value="3" class="btn btn-outline-secondary">
+        Ir a Mesero
+      </button>
     </div>
     <div class="col-12 text-center">
-      <button type="submit" class="btn btn-primary px-5">Confirm</button>
+      <button type="submit" class="btn btn-primary px-5">Confirmar</button>
     </div>
   </form>
 </div>

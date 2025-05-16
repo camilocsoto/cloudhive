@@ -1,6 +1,6 @@
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
-
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView, View
 from .models import Sede, Pais, Ciudad
 from accounts.models import Usuario
 from .forms import SedeForm, PaisForm, CiudadForm, UsuarioForm
@@ -99,3 +99,27 @@ class UsuarioDeleteView(LoginRequiredMixin, DeleteView):
     model = Usuario
     template_name = 'usuario/usuario_confirm_delete.html'
     success_url = reverse_lazy('adminis:list_usuario')
+    
+    # cambio de rol de admin.
+    
+class ChangeRolView(LoginRequiredMixin, DetailView):
+    # Acceso al html de cambio de rol
+    model = Sede
+    template_name = 'sedes/cambiar_rol.html'
+    context_object_name = 'sedes'
+    def get_context_data(self, **kwargs):
+        # carga info del usuario.
+        context = super().get_context_data(**kwargs)
+        context['usuario'] = self.request.user  
+        return context
+
+class UpdateUserRoleView(LoginRequiredMixin, View):
+    # Cambia la url del administrador según el rol elegido.
+    def post(self, request, pk):
+        new_role = request.POST.get('new_role')
+        if new_role == '2':
+            return redirect('cajero:lista_categorias')
+        if new_role == '3':
+            # cambiar a la vista del mesero 🛠️
+            return redirect('adminis:list_sede')
+        return redirect('adminis:list_sede')

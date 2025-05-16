@@ -18,9 +18,13 @@ urlpatterns = [
     path('ciudad/crear/', CiudadCreateView.as_view(), name='create_ciudad'),
     path('ciudad/<int:pk>/editar/', CiudadUpdateView.as_view(), name='update_ciudad'),
     path('ciudad/<int:pk>/eliminar/', CiudadDeleteView.as_view(), name='delete_ciudad'),
-# --- Usuarios ---
+    # --- Usuarios ---
     path('usuario/', UsuarioListView.as_view(), name='list_usuario'),
     path('usuario/crear/', UsuarioCreateView.as_view(), name='create_usuario'),
     path('usuario/<int:pk>/editar/', UsuarioUpdateView.as_view(), name='update_usuario'),
     path('usuario/<int:pk>/eliminar/', UsuarioDeleteView.as_view(), name='delete_usuario'),
+    # -- cambiar rol --
+    path('sede/<int:pk>/cambiar-rol/', ChangeRolView.as_view(), name='change_rol'),
+    path('sede/<int:pk>/update-rol/', UpdateUserRoleView.as_view(), name='update_user_rol'),
+
     ]
