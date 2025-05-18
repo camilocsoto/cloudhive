@@ -29,6 +29,8 @@ DEBUG = config("DEBUG",default=False, cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')])
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 
 # Application definition
 
@@ -39,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'crispy_forms',
     'crispy_bootstrap5',
     'accounts',
@@ -46,6 +49,8 @@ INSTALLED_APPS = [
     'mesero',
     'adminis',
 ]
+
+SITE_ID = 1
 
 AUTH_USER_MODEL = 'accounts.Usuario'
 

@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base_auth.html' %}
 {% load crispy_forms_tags static %}
 
 {% block title %}Iniciar sesión{% endblock %}
@@ -24,11 +24,17 @@
     </form>
 
     <div class="text-center mt-3">
-        {#href="{% url 'password_reset' %}"#}
-      <a href="#" class="text-decoration-none">
+      <a href="{% url 'accounts:password_reset' %}" class="text-decoration-none">
         ¿Olvidaste tu contraseña?
       </a>
     </div>
+
+    <div class="text-center mt-3">
+      <a href="{% url 'accounts:signup' %}" class="text-decoration-none">
+        Crear cuenta
+      </a>
+    </div>
+
   </div>
 </div>
 {% endblock %}

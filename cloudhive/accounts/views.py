@@ -2,7 +2,7 @@ from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView
 from .Forms import RegisterForm, LoginForm  
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeDoneView, PasswordChangeView, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 from django.contrib.auth.mixins import LoginRequiredMixin # redirige a login si no está autenticado
 
 class UserView(LoginRequiredMixin, TemplateView):
@@ -36,8 +36,32 @@ class CustomLoginView(LoginView):
 
 class CustomLogoutView(LogoutView):
     # cerrar sesión
-    next_page = reverse_lazy('accounts:logged_out') # redirige a la vista de cierre de sesión
+    next_page = reverse_lazy('accounts:logged_out') 
     
 class LoggedOutView(TemplateView):
     # vista de cierre de sesión
     template_name = "registration/logout.html"
+    
+# -- reset password -- 
+
+class CustomPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
+    template_name = 'registration/password_change_form.html'
+    success_url = reverse_lazy('accounts:password_change_done')
+
+class CustomPasswordChangeDoneView(LoginRequiredMixin, PasswordChangeDoneView):
+    template_name = 'registration/password_change_done.html'
+
+class CustomPasswordResetView(PasswordResetView):
+    template_name = 'registration/password_reset_form.html'
+    email_template_name = 'registration/password_reset_email.html'
+    success_url = reverse_lazy('accounts:password_reset_done')
+
+class CustomPasswordResetDoneView(PasswordResetDoneView):
+    template_name = 'registration/password_reset_done.html'
+
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    template_name = 'registration/password_reset_confirm.html'
+    success_url = reverse_lazy('accounts:password_reset_complete')
+
+class CustomPasswordResetCompleteView(PasswordResetCompleteView):
+    template_name = 'registration/password_reset_complete.html'

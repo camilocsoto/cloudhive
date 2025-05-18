@@ -22,13 +22,13 @@
         </a>
         <ul class="dropdown-menu text-small">
           <li><a class="dropdown-item" href="#">New project...</a></li>
-          <li><a class="dropdown-item" href="#">Settings</a></li>
-          <li><a class="dropdown-item" href="{% url 'accounts:user_view' %}">Profile</a></li>
+          <li><a class="dropdown-item" href="{% url 'accounts:user_view' %}">Perfil</a></li>
+          <li><a class="dropdown-item" href="{%url 'accounts:password_change' %}">Cambiar contraseña</a></li>
           <li><hr class="dropdown-divider"></li>
           <li>
             <form method="post" action="{% url 'accounts:logout' %}">
               {% csrf_token %}
-              <button type="submit" class="dropdown-item">Sign out</button>
+              <button type="submit" class="dropdown-item">Cerrar sesión</button>
             </form>
           </li>          
         </button>
