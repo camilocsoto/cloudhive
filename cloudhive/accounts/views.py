@@ -16,7 +16,7 @@ class UserView(LoginRequiredMixin, TemplateView):
 class SignUpView(CreateView):
     # registrar usuario
     form_class = RegisterForm  
-    success_url = reverse_lazy("login")
+    success_url = reverse_lazy("accounts:login")
     template_name = 'registration/register.html'  
 
 class CustomLoginView(LoginView):
@@ -31,9 +31,13 @@ class CustomLoginView(LoginView):
         elif user.rol == 2:
             return reverse_lazy('cajero:lista_categorias')
         elif user.rol == 3:
-            return reverse_lazy('user_view')
+            return reverse_lazy('accounts:user_view')
         return super().get_success_url()
 
 class CustomLogoutView(LogoutView):
     # cerrar sesión
+    next_page = reverse_lazy('accounts:logged_out') # redirige a la vista de cierre de sesión
+    
+class LoggedOutView(TemplateView):
+    # vista de cierre de sesión
     template_name = "registration/logout.html"
