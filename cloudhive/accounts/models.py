@@ -27,7 +27,7 @@ class Usuario(AbstractUser):
     correo = models.EmailField(max_length=100, unique=True, verbose_name='Correo electrónico')
     # 'password' ya existe en AbstractUser
     rol = models.IntegerField(choices=ROLES, default=3)
-    estado = models.IntegerField(choices=ESTADO, default=0)
+    estado = models.BooleanField(choices=ESTADO, default=0)
     # Nueva relación opcional a Sede
     sede = models.ForeignKey(
         Sede,

@@ -55,7 +55,7 @@ class Sede(models.Model):
     
     idSede = models.AutoField(primary_key=True, db_column='idSede')
     nombre = models.CharField(max_length=100, null=True, db_column='nombre')
-    estado = models.IntegerField(choices=ESTADO, null=True, default=1,db_column='estado')
+    estado = models.BooleanField(choices=ESTADO, null=True, default=1,db_column='estado')
     Ciudad = models.ForeignKey(
         Ciudad,
         on_delete=models.PROTECT,

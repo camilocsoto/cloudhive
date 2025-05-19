@@ -24,7 +24,12 @@ urlpatterns = [
     path('usuario/<int:pk>/editar/', UsuarioUpdateView.as_view(), name='update_usuario'),
     path('usuario/<int:pk>/eliminar/', UsuarioDeleteView.as_view(), name='delete_usuario'),
     # -- cambiar rol --
-    path('sede/<int:pk>/cambiar-rol/', ChangeRolView.as_view(), name='change_rol'),
+    path('sede/<int:pk>/detalles/', ChangeRolView.as_view(), name='change_rol'),
     path('sede/<int:pk>/update-rol/', UpdateUserRoleView.as_view(), name='update_user_rol'),
-
-    ]
+    # -- mesas --
+    path('sede/<int:sede_pk>/mesas/crear/', MesaCreateView.as_view(), name='create_mesa'),
+    path( 'mesas/<int:pk>/editar/', MesaUpdateView.as_view(), name='update_mesa'),
+    path( 'mesas/<int:pk>/eliminar/', MesaDeleteView.as_view(), name='delete_mesa'),
+    
+]
+    
