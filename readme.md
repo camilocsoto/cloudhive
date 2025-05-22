@@ -1,19 +1,19 @@
-CloudHive  
-...  
 #### ¿cómo correr el proyecto en mi computadora?  
 
-Se ha puesto a disposición una guía paso a paso para ejecutar el proyecto en producción utilizando Docker, y otra para para ejecutar el servidor de django en un servidor local.
+Hay una guía paso a paso para ejecutar el proyecto en producción utilizando Docker **(pag 1-7)**, y otra para para ejecutarlo en un servidor local **(pag 7-10)**.  
 
-A continuación, encontrará el enlace a la guía detallada:  
+[manual to exec .pdf](https://uniminuto0-my.sharepoint.com/:b:/g/personal/juan_suarez-so_uniminuto_edu_co/Ee8j0Xh8C5lCs7LQtARElOABI0mAyYcN4HmdPV78EH61UQ?e=PYaiwV)  
 
-[manual to exec .pdf](https://uniminuto0-my.sharepoint.com/:b:/g/personal/juan_suarez-so_uniminuto_edu_co/Ee8j0Xh8C5lCs7LQtARElOABI0mAyYcN4HmdPV78EH61UQ?e=PYaiwV)
+#### ¿cómo ejecutar el proyecto?  
 
-Posteriormente, debe ejecutar el comando: `docker-compose exec django-web python manage.py migrate` para activar todos los servicios de django.
+Debe crear un super usuario para entrar al módulo del administrador con el comando: `py manage.py createsuperuser` para acceder al módulo del administrador.  
+
+![superuser](./cloudhive/templates/static/images/create_super_user.png)
+
+#### otros:  
+
+debe ejecutar el comando: `docker-compose exec django-web python manage.py migrate` para activar todos los servicios de django.
 
 ![alt func](https://developer.mozilla.org/es/docs/Learn_web_development/Extensions/Server-side/Django/Home_page/basic-django.png)
 
 
-#### otros comandos útiles:  
- 
-- **Crear otra app:** `docker-compose exec django-web python manage.py startapp __name_your_app__`  
-- **Crear migraciones:** `docker-compose exec django-web python manage.py makemigrations`  
