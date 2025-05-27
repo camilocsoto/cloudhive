@@ -6,6 +6,8 @@ from accounts.models import Usuario
 from mesero.models import Mesa
 from .forms import SedeForm, PaisForm, CiudadForm, UsuarioForm, MesaForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponse
+from .report import SalesBySedeReport
 
 class SedeListView(LoginRequiredMixin, ListView):
     model = Sede
@@ -172,3 +174,24 @@ class MesaDeleteView(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         # regresa al menú anterior
         return reverse_lazy('adminis:change_rol', kwargs={'pk': self.object.sede.pk})
+    
+# Reporte de ventas por sede
+class SalesBySedeExcelView(LoginRequiredMixin, View):
+    """
+    Descarga el reporte de ventas agrupado por sede y producto en un XLSX.
+    """
+
+    def get(self, request, *args, **kwargs):
+        report = SalesBySedeReport()
+        df = report.build_dataframe()
+        excel_file = report.to_excel(df)
+
+        # Nombre de archivo con marca de tiempo
+        filename = f"sales_report.xlsx"
+
+        response = HttpResponse(
+            excel_file.read(),
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        return response

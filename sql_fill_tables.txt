@@ -1,0 +1,85 @@
+scripts para llenar tablas:
+sqlite3 db.sqlite3
+
+INSERT INTO cajero_proveedor (nombre, estado) VALUES ('Acme S.A.', 1);
+INSERT INTO cajero_proveedor (nombre, estado) VALUES ('Distribuciones XYZ', 1);
+INSERT INTO cajero_proveedor (nombre, estado) VALUES ('Logística Alpha', 0);
+INSERT INTO cajero_proveedor (nombre, estado) VALUES ('Antioquia SAS', 0);
+INSERT INTO cajero_proveedor (nombre, estado) VALUES ('Nectar', 0);
+
+INSERT INTO cajero_categoria (nombre, estado) VALUES ('Tequila', 1);
+INSERT INTO cajero_categoria (nombre, estado) VALUES ('Bebidas', 1);
+INSERT INTO cajero_categoria (nombre, estado) VALUES ('Ron', 0);
+INSERT INTO cajero_categoria (nombre, estado) VALUES ('Cocteles', 0);
+INSERT INTO cajero_categoria (nombre, estado) VALUES ('Nectar', 0);
+
+
+-- 10 productos para Sede idSede = 2 (Zona T - Bogotá)
+INSERT INTO cajero_producto (nombre, stock, precio_compra, precio_venta, sede_id, categoria_id, proveedor_id) VALUES
+('Silver Tequila',     50,  12000.00, 15000.00, 2, 1, 1),
+('Gold Tequila',       30,  15000.00, 18000.00, 2, 1, 2),
+('Premium Tequila',    20,  20000.00, 24000.00, 2, 1, 3),
+('Soda Mixer',         100, 1500.00,  2000.00, 2, 2, 1),
+('Agua Tonica',        80,  1200.00,  1700.00, 2, 2, 2),
+('Coca Cola',          60,  1300.00,  1800.00, 2, 2, 5),
+('Bacardi Ron',        40,  8000.00,  10000.00,2, 3, 2),
+('Havana Club Ron',    25,  9000.00,  11000.00,2, 3, 3),
+('Ron Añejo',          15,  10000.00, 12500.00,2, 3, 1),
+('Mojito Coctel Kit',  10,  5000.00,  6500.00, 2, 4, 2);
+
+-- 10 productos para Sede idSede = 3 (Sede Modelia)
+INSERT INTO cajero_producto (nombre, stock, precio_compra, precio_venta, sede_id, categoria_id, proveedor_id) VALUES
+('Classic Margarita',  20,  7000.00,  9000.00, 3, 4, 1),
+('Piña Colada',        18,  7500.00,  9500.00, 3, 4, 2),
+('Cosmopolitan',       12,  8000.00,  10000.00,3, 4, 3),
+('Tequila Sunrise',    22,  8500.00,  10500.00,3, 4, 5),
+('Agua Mineral',       90,  1000.00,  1500.00, 3, 2, 1),
+('Bitter Mixer',       70,  1400.00,  1900.00, 3, 2, 2),
+('White Rum',          35,  8200.00,  10200.00,3, 3, 3),
+('Dark Rum',           28,  8800.00,  10800.00,3, 3, 1),
+('Premium Ron',        14,  11000.00, 13500.00,3, 3, 2),
+('Signature Tequila',   8,  22000.00, 26000.00,3, 1, 5);
+
+
+INSERT INTO cajero_metodopago (nombre, estado) VALUES ('Efectivo', 1);
+INSERT INTO cajero_metodopago (nombre, estado) VALUES ('Nequi', 1);
+INSERT INTO cajero_metodopago (nombre, estado) VALUES ('Daviplata', 1);
+INSERT INTO cajero_metodopago (nombre, estado) VALUES ('Consignación bancaria', 1);
+
+
+-- 1) INSERT en cajero_pedido
+INSERT INTO cajero_pedido (estado, fecha_pedido, pago_total, metodo_pago_id, mesa_id) VALUES
+  (1, '2025-05-27 12:00:00', 100.00, 1, 1),
+  (1, '2025-05-27 12:00:00', 100.00, 2, 2),
+  (1, '2025-05-27 12:00:00', 100.00, 3, 3),
+  (1, '2025-05-27 12:00:00', 100.00, 4, 4),
+  (1, '2025-05-27 12:00:00', 100.00, 1, 5),
+  (1, '2025-05-27 12:00:00', 100.00, 2, 6);
+
+-- 2) INSERT en cajero_detallepedido
+-- Para cada pedido (id implícito 1–6) dos productos distintos:
+INSERT INTO cajero_pedidoproducto (pedido_id, producto_id, cantidad) VALUES
+  -- Pedido 1: Mesa 1
+  (1,  1,  1),
+  (1,  7,  2),
+
+  -- Pedido 2: Mesa 2
+  (2,  2,  1),
+  (2,  8,  2),
+
+  -- Pedido 3: Mesa 3
+  (3,  3,  1),
+  (3,  9,  2),
+
+  -- Pedido 4: Mesa 4
+  (4,  4,  1),
+  (4, 10,  2),
+
+  -- Pedido 5: Mesa 5
+  (5,  5,  1),
+  (5, 11,  2),
+
+  -- Pedido 6: Mesa 6
+  (6,  6,  1),
+  (6, 12,  2);
+

@@ -30,6 +30,8 @@ urlpatterns = [
     path('sede/<int:sede_pk>/mesas/crear/', MesaCreateView.as_view(), name='create_mesa'),
     path( 'mesas/<int:pk>/editar/', MesaUpdateView.as_view(), name='update_mesa'),
     path( 'mesas/<int:pk>/eliminar/', MesaDeleteView.as_view(), name='delete_mesa'),
+    # -- report --
+      path('report/', SalesBySedeExcelView.as_view(), name='sales_by_sede_xlsx'),
     
 ]
     
