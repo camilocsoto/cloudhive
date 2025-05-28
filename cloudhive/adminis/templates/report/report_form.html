@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="row">
+    <!-- Sidebar de administración -->
+    <nav class="col-12 col-md-3 mb-4 mb-md-0">
+      <div class="list-group">
+        <span class="list-group-item list-group-item-action active">
+          Panel de administración
+        </span>
+        <a href="{% url 'adminis:list_usuario' %}" class="list-group-item list-group-item-action">
+          Administrar usuario
+        </a>
+        <a href="{% url 'adminis:list_usuario' %}" class="list-group-item list-group-item-action">
+          Administrar usuarios
+        </a>
+        <a href="{% url 'adminis:list_pais' %}" class="list-group-item list-group-item-action">
+          Administrar país
+        </a>
+        <a href="{% url 'adminis:list_ciudad' %}" class="list-group-item list-group-item-action">
+          Administrar ciudad
+        </a>
+      </div>
+    </nav>
+
+    <!-- Contenido principal: formulario -->
+    <div class="col-12 col-md-9">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3">Generar Reporte</h1>
+      </div>
+
+      <form method="get" action="{% url 'adminis:gen_rep' %}" class="card p-4 shadow-sm">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="fecha_inicio" class="form-label">Fecha de inicio</label>
+            <input type="date" id="fecha_inicio" name="fecha_inicio" class="form-control" required>
+          </div>
+          <div class="col-md-6">
+            <label for="fecha_fin" class="form-label">Fecha de fin</label>
+            <input type="date" id="fecha_fin" name="fecha_fin" class="form-control" required max="{{ today }}">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-success">Generar y descargar</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

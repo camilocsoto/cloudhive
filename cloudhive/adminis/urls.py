@@ -31,7 +31,7 @@ urlpatterns = [
     path( 'mesas/<int:pk>/editar/', MesaUpdateView.as_view(), name='update_mesa'),
     path( 'mesas/<int:pk>/eliminar/', MesaDeleteView.as_view(), name='delete_mesa'),
     # -- report --
-      path('report/', SalesBySedeExcelView.as_view(), name='sales_by_sede_xlsx'),
-    
+    path('reporte/', ReporteFormView.as_view(), name='reporte_form'),
+    path('gen_report/', SalesBySedeExcelView.as_view(), name='gen_rep'), #descarga .xlsx
 ]
     

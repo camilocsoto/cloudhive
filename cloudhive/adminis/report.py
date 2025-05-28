@@ -1,34 +1,49 @@
 import pandas as pd
-from django.utils.timezone import now
+from django.utils.dateparse import parse_date
 from io import BytesIO
-
 from adminis.models import Sede
 from cajero.models import Producto, DetallePedido
 
 class SalesBySedeReport:
     """
-    Genera un DataFrame con las columnas:
-      - id_producto
-      - nombre_producto
-      - cantidad_producto (sumada por sede y producto)
-      - valor_compra (precio_compra * cantidad)
-      - valor_venta  (precio_venta  * cantidad)
-      - ganancia     (valor_venta - valor_compra)
-      - sede_nombre
-    Agrupado por (sede, producto).
+    Igual que antes, pero ahora acepta un rango de fechas para filtrar
+    pedidos completados (estado=1) por fecha_pedido.
     """
 
-    def build_dataframe(self):
-        # Traer todos los detalles para pedidos completados
-        detalles = DetallePedido.objects.filter(
-            pedido__estado=1
-        ).select_related('producto__sede')
+    def __init__(self, fecha_inicio=None, fecha_fin=None):
+        """
+        fecha_inicio, fecha_fin: strings 'YYYY-MM-DD' o date objects
+        """
+        # parsear strings a date si es necesario
+        if isinstance(fecha_inicio, str):
+            fecha_inicio = parse_date(fecha_inicio)
+        if isinstance(fecha_fin, str):
+            fecha_fin = parse_date(fecha_fin)
 
-        # Preparar lista de dicts
+        self.fecha_inicio = fecha_inicio
+        self.fecha_fin = fecha_fin
+
+    def build_dataframe(self):
+        # Base filter: pedidos completados
+        filtros = {'pedido__estado': 1}
+
+        # Añadir filtro de fecha si nos dieron ambas
+        if self.fecha_inicio:
+            filtros['pedido__fecha_pedido__date__gte'] = self.fecha_inicio
+        if self.fecha_fin:
+            filtros['pedido__fecha_pedido__date__lte'] = self.fecha_fin
+
+        # Aplicar el filtro a los detalles
+        detalles = DetallePedido.objects.filter(**filtros).select_related(
+            'producto__sede'
+        )
+
         rows = []
         for det in detalles:
             prod = det.producto
             sede = prod.sede
+            if not sede:
+                continue
             rows.append({
                 'sede_id'         : sede.idSede,
                 'sede_nombre'     : sede.nombre,
@@ -40,23 +55,19 @@ class SalesBySedeReport:
             })
 
         df = pd.DataFrame(rows)
-
-        # Agrupar por sede e ID de producto
         agg = df.groupby(
-            ['sede_id', 'sede_nombre', 'id_producto', 'nombre_producto'],
+            ['sede_id','sede_nombre','id_producto','nombre_producto'],
             as_index=False
         ).agg({
-            'cantidad'      : 'sum',
-            'precio_compra' : 'first',   # ya es constante por producto
-            'precio_venta'  : 'first',
+            'cantidad':'sum',
+            'precio_compra':'first',
+            'precio_venta':'first'
         })
 
-        # Calcular valores y ganancia
         agg['valor_compra'] = agg['precio_compra'] * agg['cantidad']
         agg['valor_venta']  = agg['precio_venta']  * agg['cantidad']
         agg['ganancia']     = agg['valor_venta']   - agg['valor_compra']
 
-        # Reordenar columnas
         return agg[[
             'id_producto',
             'nombre_producto',
@@ -68,9 +79,6 @@ class SalesBySedeReport:
         ]]
 
     def to_excel(self, df: pd.DataFrame) -> BytesIO:
-        """
-        Escribe el DataFrame a un BytesIO en formato Excel y lo devuelve.
-        """
         output = BytesIO()
         with pd.ExcelWriter(output, engine='openpyxl') as writer:
             df.to_excel(writer, index=False, sheet_name='Reporte')

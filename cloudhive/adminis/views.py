@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView, View
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView, View, TemplateView
 from .models import Sede, Pais, Ciudad
 from accounts.models import Usuario
 from mesero.models import Mesa
@@ -8,6 +8,7 @@ from .forms import SedeForm, PaisForm, CiudadForm, UsuarioForm, MesaForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from .report import SalesBySedeReport
+from datetime import date
 
 class SedeListView(LoginRequiredMixin, ListView):
     model = Sede
@@ -180,18 +181,31 @@ class SalesBySedeExcelView(LoginRequiredMixin, View):
     """
     Descarga el reporte de ventas agrupado por sede y producto en un XLSX.
     """
-
     def get(self, request, *args, **kwargs):
-        report = SalesBySedeReport()
-        df = report.build_dataframe()
-        excel_file = report.to_excel(df)
+        fecha_inicio = request.GET.get('fecha_inicio')
+        fecha_fin    = request.GET.get('fecha_fin')
 
-        # Nombre de archivo con marca de tiempo
-        filename = f"sales_report.xlsx"
+        # Crear el reporte con los parámetros de fecha (pueden ser None)
+        report = SalesBySedeReport(fecha_inicio=fecha_inicio, fecha_fin=fecha_fin)
+        df     = report.build_dataframe()
+        excel  = report.to_excel(df)
+
+        filename = "sales_report"
+        if fecha_inicio and fecha_fin:
+            filename += f"_{fecha_inicio}_to_{fecha_fin}"
+        filename += ".xlsx"
 
         response = HttpResponse(
-            excel_file.read(),
+            excel.read(),
             content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         )
         response['Content-Disposition'] = f'attachment; filename="{filename}"'
         return response
+
+class ReporteFormView(LoginRequiredMixin, TemplateView):
+    template_name = 'report/report_form.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['today'] = date.today().isoformat()  # 'YYYY-MM-DD'
+        return context
