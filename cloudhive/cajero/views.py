@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Categoria
+from .models import Categoria, Producto
 from .forms.categoria_form import CategoriaForm
 # home/views.py
 from django.views.generic import TemplateView
 
 def lista_categorias(request):
     categorias = Categoria.objects.all()
-    return render(request, 'lista.html', {'categorias': categorias})
+    return render(request, 'categoria/lista.html', {'categorias': categorias})
 
 def crear_categoria(request):
     if request.method == 'POST':
@@ -41,3 +41,9 @@ def eliminar_categoria(request, idCategoria):
 
 class HomeView(TemplateView):
     template_name = "inicio.html"
+
+
+# Productos
+def lista_productos(request):
+    productos = Producto.objects.all()
+    return render(request, 'producto/productos.html', {'productos': productos})

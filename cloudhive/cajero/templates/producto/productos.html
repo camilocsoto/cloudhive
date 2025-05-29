@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags static %}
+{% load humanize %}
+
+{% block title %}Lista de Categorías{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <h1 class="mb-4">Productos</h1>
+
+    <div class="mb-3">
+        <a href="{% url 'cajero:crear_categoria' %}" class="btn btn-primary">Crear Nueva Categoría</a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover text-center align-middle">
+            <thead class="table-dark text-center">
+                <tr>
+                    <th rowspan="2" class="align-middle">Nombre</th>
+                    <th rowspan="2" class="align-middle">Stock</th>
+                    <th colspan="2" class="align-middle">Precio</th>
+                    <th rowspan="2" class="align-middle">Sede</th>
+                    <th rowspan="2" class="align-middle">Categoría</th>
+                    <th rowspan="2" class="align-middle">Proveedor</th>
+                    <th colspan="2" class="align-middle">Acciones</th>
+                </tr>
+                <tr>
+                    <th class="align-middle">Compra</th>
+                    <th class="align-middle">Venta</th>
+                    <th class="align-middle">Editar</th>
+                    <th class="align-middle">Desactivar</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for p in productos %}
+                <tr>
+                    <td>{{ p.nombre }}</td>
+                    <td>{{ p.stock }}</td>
+                    <td>${{ p.precio_compra|floatformat:0|intcomma }}</td>
+                    <td>${{ p.precio_venta|floatformat:0|intcomma }}</td>
+                    <td>{{ p.sede }}</td>
+                    <td>{{ p.categoria }}</td>
+                    <td>{{ p.proovedor }}</td>
+                    <td>
+                        <a href="" class="btn btn-sm btn-warning">Editar</a>
+                    </td>
+                    <td>
+                        <a href="" class="btn btn-sm btn-danger">Desactivar</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="9">No hay productos creados.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
