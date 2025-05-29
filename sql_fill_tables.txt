@@ -1,5 +1,18 @@
 scripts para llenar tablas:
 sqlite3 db.sqlite3
+nota: Asegurate de correr ese comando en el mismo directorio que está manage.py, requirements.txt y db.sqlite3. Porque, si lo ejecutas en otro lugar, te crea otra base de datos.
+- Para ver que estés bien, ejecuta .tables y si ves un montón de tablas, estas en la base de datos correcta.
+
+
+
+INSERT INTO Pais (idPais, Nombre, estado) VALUES (1, 'Colombia', 1);
+INSERT INTO Pais (idPais, Nombre, estado) VALUES (2, 'México', 1);
+
+INSERT INTO Ciudad (idCiudad, nombre, Pais_idPais, estado) VALUES (1, 'Bogotá', 1, 1);
+INSERT INTO Ciudad (idCiudad, nombre, Pais_idPais, estado) VALUES (2, 'Medellin', 1, 1);
+
+INSERT INTO Sede (idSede, nombre, Ciudad_idCiudad, estado) VALUES (2, 'Zona T -Bogotá.', 1, 1);
+INSERT INTO Sede (idSede, nombre, Ciudad_idCiudad, estado) VALUES (3, 'Sede modelia', 1, 1);
 
 INSERT INTO cajero_proveedor (nombre, estado) VALUES ('Acme S.A.', 1);
 INSERT INTO cajero_proveedor (nombre, estado) VALUES ('Distribuciones XYZ', 1);
@@ -12,6 +25,16 @@ INSERT INTO cajero_categoria (nombre, estado) VALUES ('Bebidas', 1);
 INSERT INTO cajero_categoria (nombre, estado) VALUES ('Ron', 0);
 INSERT INTO cajero_categoria (nombre, estado) VALUES ('Cocteles', 0);
 INSERT INTO cajero_categoria (nombre, estado) VALUES ('Nectar', 0);
+
+-- para la tabla `mesero_mesa` con los datos proporcionados:
+
+INSERT INTO mesero_mesa (id, nombre, estado, sede_id, capacidad) VALUES (1, 'VIP 1', 0, 2, 6);
+INSERT INTO mesero_mesa (id, nombre, estado, sede_id, capacidad) VALUES (2, 'VP2', 0, 2, 2);
+INSERT INTO mesero_mesa (id, nombre, estado, sede_id, capacidad) VALUES (3, 'plateado 1', 0, 2, 5);
+INSERT INTO mesero_mesa (id, nombre, estado, sede_id, capacidad) VALUES (4, 'piso 1 - mesa 1', 0, 3, 2);
+INSERT INTO mesero_mesa (id, nombre, estado, sede_id, capacidad) VALUES (5, 'piso 1- mesa 2', 0, 3, 4);
+INSERT INTO mesero_mesa (id, nombre, estado, sede_id, capacidad) VALUES (6, 'piso 2 - mesa 1', 0, 3, 3);
+
 
 
 -- 10 productos para Sede idSede = 2 (Zona T - Bogotá)
