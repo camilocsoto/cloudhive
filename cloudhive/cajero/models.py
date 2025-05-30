@@ -22,7 +22,7 @@ class MetodoPago(models.Model):
     estado = models.BooleanField(choices=ESTADO, default=0, verbose_name='Estado de la mesa')
     
     def __str__(self):
-        return f'método de pago {self.nombre} está {"disponible" if self.estado == 0 else "ocupado"}'
+        return f'método {self.nombre}'
 
 class Proveedor(models.Model):
     ESTADO = (

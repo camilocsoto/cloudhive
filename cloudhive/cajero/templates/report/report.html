@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="row">
+    <!-- Contenido principal: formulario -->
+    <div class="col-12 col-md-9">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3">Generar Reporte</h1>
+      </div>
+
+      <form method="get" action="{% url 'adminis:gen_rep' %}" class="card p-4 shadow-sm">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="fecha_inicio" class="form-label">Fecha de inicio</label>
+            <input type="date" id="fecha_inicio" name="fecha_inicio" class="form-control" required>
+          </div>
+          <div class="col-md-6">
+            <label for="fecha_fin" class="form-label">Fecha de fin</label>
+            <input type="date" id="fecha_fin" name="fecha_fin" class="form-control" required max="{{ today }}">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-success">Generar y descargar</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

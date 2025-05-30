@@ -129,7 +129,7 @@ class UpdateUserRoleView(LoginRequiredMixin, View):
         user.save()
         # Cambia la url del administrador según el rol elegido.
         if new_role == '2':
-            return redirect('cajero:lista_categorias')
+            return redirect('cajero:user_mesas')
         if new_role == '3':
             # cambiar a la vista del mesero 🛠️
             return redirect('adminis:list_sede')
@@ -178,29 +178,37 @@ class MesaDeleteView(LoginRequiredMixin, DeleteView):
     
 # Reporte de ventas por sede
 class SalesBySedeExcelView(LoginRequiredMixin, View):
-    """
-    Descarga el reporte de ventas agrupado por sede y producto en un XLSX.
-    """
     def get(self, request, *args, **kwargs):
-        fecha_inicio = request.GET.get('fecha_inicio')
-        fecha_fin    = request.GET.get('fecha_fin')
+        fi = request.GET.get('fecha_inicio')
+        ff = request.GET.get('fecha_fin')
+        # si el rol NO es admin (1), filtramos por su sede
+        sede_id = None
+        if request.user.rol != 1:
+            sede_id = request.user.sede_id
 
-        # Crear el reporte con los parámetros de fecha (pueden ser None)
-        report = SalesBySedeReport(fecha_inicio=fecha_inicio, fecha_fin=fecha_fin)
+        report = SalesBySedeReport(fecha_inicio=fi, fecha_fin=ff, sede_id=sede_id)
         df     = report.build_dataframe()
         excel  = report.to_excel(df)
 
         filename = "sales_report"
-        if fecha_inicio and fecha_fin:
-            filename += f"_{fecha_inicio}_to_{fecha_fin}"
+        if fi and ff:
+            filename += f"_{fi}_to_{ff}"
         filename += ".xlsx"
 
-        response = HttpResponse(
+        resp = HttpResponse(
             excel.read(),
             content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         )
-        response['Content-Disposition'] = f'attachment; filename="{filename}"'
-        return response
+        resp['Content-Disposition'] = f'attachment; filename=\"{filename}\"'
+        return resp
+    
+    def get_context_data(self, **kwargs):
+        # para renderizar el form si es plantilla; si no la usas déjalo así
+        context = super().get_context_data(**kwargs)
+        context['today'] = date.today().isoformat()
+        return context
+
+
 
 class ReporteFormView(LoginRequiredMixin, TemplateView):
     template_name = 'report/report_form.html'

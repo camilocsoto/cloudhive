@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h2 class="card-title mb-4">
+        {% if object %}Editar Producto{% else %}Crear Nuevo Producto{% endif %}
+      </h2>
+      <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div class="mb-3">
+          {{ form.nombre.label_tag }}
+          {{ form.nombre }}
+          {{ form.nombre.errors }}
+        </div>
+        <div class="mb-3">
+          {{ form.stock.label_tag }}
+          {{ form.stock }}
+          {{ form.stock.errors }}
+        </div>
+        <div class="mb-3">
+          {{ form.precio_compra.label_tag }}
+          {{ form.precio_compra }}
+          {{ form.precio_compra.errors }}
+        </div>
+        <div class="mb-3">
+          {{ form.precio_venta.label_tag }}
+          {{ form.precio_venta }}
+          {{ form.precio_venta.errors }}
+        </div>
+        <div class="mb-3">
+          {{ form.categoria.label_tag }}
+          {{ form.categoria }}
+          {{ form.categoria.errors }}
+        </div>
+        <div class="mb-3">
+          {{ form.proveedor.label_tag }}
+          {{ form.proveedor }}
+          {{ form.proveedor.errors }}
+        </div>
+        <button type="submit" class="btn btn-success">Guardar</button>
+        <a href="{% url 'cajero:producto_list' %}" class="btn btn-secondary ms-2">Cancelar</a>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

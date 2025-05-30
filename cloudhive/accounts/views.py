@@ -29,9 +29,9 @@ class CustomLoginView(LoginView):
         if user.rol == 1:
             return reverse_lazy('adminis:list_sede')
         elif user.rol == 2:
-            return reverse_lazy('cajero:lista_categorias')
+            return reverse_lazy('cajero:user_mesas')
         elif user.rol == 3:
-            return reverse_lazy('accounts:user_view')
+            return reverse_lazy('accounts:user_view') # módulo de sebas
         return super().get_success_url()
 
 class CustomLogoutView(LogoutView):

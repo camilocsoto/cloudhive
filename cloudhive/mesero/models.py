@@ -19,6 +19,5 @@ class Mesa(models.Model):
         verbose_name='Sede asignada'
     )
     
-    
     def __str__(self):
         return f'mesa {self.nombre} de cap. {self.capacidad} de la sede {self.sede.nombre}'

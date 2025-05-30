@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h1 class="h3 mb-3">Detalle Mesa {{ mesa.nombre }}</h1>
+
+  {% if disponible %}
+    <div class="alert alert-success">
+      Mesa disponible
+    </div>
+  {% else %}
+    <div class="card mb-4">
+      <div class="card-body">
+        <p><strong>Fecha pedido:</strong> {{ fecha_pedido }}</p>
+        <p><strong>Mesa:</strong> {{ mesa.nombre }} (ID {{ mesa.pk }})</p>
+        <p><strong>Total a pagar:</strong> ${{ total_factura }}</p>
+
+        <h5 class="mt-4">Productos:</h5>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Cantidad</th>
+              <th>Precio unitario</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in factura_records %}
+            <tr>
+              <td>{{ row.producto }}</td>
+              <td>{{ row.cantidad }}</td>
+              <td>${{ row.precio_unitario }}</td>
+              <td>${{ row.subtotal }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="4" class="text-center">No hay líneas de pedido.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        {% if factura_records %}
+          <form method="post" class="mt-4">
+            {% csrf_token %}
+            <div class="mb-3">
+              {{ form.metodo_pago.label_tag }}
+              {{ form.metodo_pago }}
+              {{ form.metodo_pago.errors }}
+            </div>
+            <button type="submit" class="btn btn-success">Confirmar pago</button>
+          </form>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+
+  <a href="{% url 'cajero:user_mesas' %}" class="btn btn-secondary">
+    Volver al listado
+  </a>
+</div>
+{% endblock %}

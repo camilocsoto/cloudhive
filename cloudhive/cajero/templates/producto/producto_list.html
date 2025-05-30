@@ -1,16 +1,11 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags static %}
 {% load humanize %}
-
-{% block title %}Lista de Categorías{% endblock %}
-
 {% block content %}
-
 <div class="container">
-    <h1 class="mb-4">Productos</h1>
+    <h1 class="mb-4">Productos en {{ sede.nombre }}</h1>
 
     <div class="mb-3">
-        <a href="{% url 'cajero:crear_categoria' %}" class="btn btn-primary">Crear Nueva Categoría</a>
+        <a href="{% url 'cajero:producto_create' %}" class="btn btn-primary">+ Nuevo Producto</a>
     </div>
 
     <div class="table-responsive">
@@ -29,35 +24,33 @@
                     <th class="align-middle">Compra</th>
                     <th class="align-middle">Venta</th>
                     <th class="align-middle">Editar</th>
-                    <th class="align-middle">Desactivar</th>
+                    <th class="align-middle">Eliminar</th>
                 </tr>
             </thead>
-
             <tbody>
                 {% for p in productos %}
                 <tr>
                     <td>{{ p.nombre }}</td>
-                    <td>{{ p.stock }}</td>
-                    <td>${{ p.precio_compra|floatformat:0|intcomma }}</td>
-                    <td>${{ p.precio_venta|floatformat:0|intcomma }}</td>
-                    <td>{{ p.sede }}</td>
-                    <td>{{ p.categoria }}</td>
-                    <td>{{ p.proovedor }}</td>
+                    <td>{{ p.stock|intcomma }}</td>
+                    <td>${{ p.precio_compra|floatformat:2|intcomma }}</td>
+                    <td>${{ p.precio_venta|floatformat:2|intcomma }}</td>
+                    <td>{{ p.sede.nombre }}</td>
+                    <td>{{ p.categoria.nombre }}</td>
+                    <td>{{ p.proveedor.nombre }}</td>
                     <td>
-                        <a href="" class="btn btn-sm btn-warning">Editar</a>
+                        <a href="{% url 'cajero:producto_update' p.pk %}" class="btn btn-sm btn-warning">Editar</a>
                     </td>
                     <td>
-                        <a href="" class="btn btn-sm btn-danger">Desactivar</a>
+                        <a href="{% url 'cajero:producto_delete' p.pk %}" class="btn btn-sm btn-danger">Eliminar</a>
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="9">No hay productos creados.</td>
+                    <td colspan="9" class="text-center">No hay productos en esta sede.</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 </div>
-
 {% endblock %}
