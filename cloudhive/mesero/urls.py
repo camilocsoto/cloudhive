@@ -1,6 +1,10 @@
 from django.urls import path
+from .views import *
 
-from .views import producto_json
 urlpatterns = [
-    path('producto/', producto_json, name = "producto"),
+    path('', lista_mesas, name = "mesas"),
+    path('verpedidos/', ver_pedidos, name='ver_pedidos'),
+    path("cancelar-mesa/", cancelar_mesa, name="cancelar_mesa"),
+    path('agregar-producto/', agregar_producto_pedido, name='agregar_producto'),
+
 ]

@@ -1,0 +1,579 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block content %}
+
+<style>
+    :root {
+        --verde-pastel: #a8e6cf;
+        --rojo-pastel: #ffaaa5;
+        --texto-oscuro: #3a3a3a;
+        --sombra-suave: 0 3px 10px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Contenedor principal */
+    .mesas-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+        padding: 20px;
+    }
+
+    /* Tarjeta de mesa */
+    .mesa-card {
+        border-radius: 12px;
+        padding: 18px;
+        background: white;
+        border: 1px solid #eee;
+        box-shadow: var(--sombra-suave);
+        transition: all 0.3s ease;
+        color: var(--texto-oscuro);
+    }
+
+    /* Estados */
+    .mesa-disponible {
+        border-left: 4px solid #a8e6cf; /* Borde lateral verde */
+    }
+
+    .mesa-ocupada {
+        border-left: 4px solid #ffaaa5; /* Borde lateral rojo */
+    }
+
+    /* Header */
+    .mesa-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        border-bottom: 1px dashed #e0e0e0;
+        padding-bottom: 8px;
+    }
+
+    .mesa-header h3 {
+        margin: 0;
+        font-size: 1.2rem;
+        color: #2a2a2a;
+    }
+
+    .estado-badge {
+        font-size: 0.85rem;
+        padding: 4px 8px;
+        border-radius: 12px;
+        background: #f8f8f8;
+    }
+
+    /* Body */
+    .mesa-body p {
+        margin: 8px 0;
+        font-size: 0.95rem;
+        color: #555;
+    }
+
+    /* Hover effect */
+    .mesa-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+        .mesas-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+        /* Estilos del Modal */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(3px);
+    }
+
+    .modal-contenido {
+        background-color: #fff;
+        margin: 1% auto;
+        padding: 25px;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 600px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        animation: fadeIn 0.3s;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal-cerrar {
+        float: right;
+        font-size: 24px;
+        cursor: pointer;
+        color: #aaa;
+    }
+
+    .modal-body {
+        margin: 20px 0;
+        line-height: 1.6;
+    }
+
+    .modal-acciones {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+    }
+
+    .modal-acciones button {
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        border: none;
+    }
+
+    .modal-acciones button:first-child {
+        background-color: var(--verde-pastel);
+    }
+
+    .modal-acciones button.secundario {
+        background-color: #f0f0f0;
+    }
+
+    .mesa-card {
+        cursor: pointer; /* Cambia el cursor a mano al pasar sobre cualquier parte */
+        user-select: none; /* Evita que se seleccione texto al hacer clic */
+    }
+
+    /* Asegúrate que ningún elemento hijo bloquee los clics */
+    .mesa-header, .mesa-body, .mesa-body * {
+        pointer-events: none; /* Permite que el clic llegue siempre al contenedor padre */
+    }
+
+        /* Catálogo dentro del modal */
+    .catalogo-productos {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        margin-top: 20px;
+    }
+
+    /* Tarjeta de producto sin imagen */
+    .producto-card {
+        border-radius: 12px;
+        background: white;
+        border: 1px solid #eee;
+        box-shadow: var(--sombra-suave);
+        padding: 16px;
+        text-align: left;
+        transition: transform 0.2s ease;
+        color: var(--texto-oscuro);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .producto-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+    }
+
+    /* Contenido del producto */
+    .producto-info {
+        font-size: 0.95rem;
+        line-height: 1.4;
+    }
+
+    /* Botón de selección */
+    .producto-info button {
+        margin-top: 12px;
+        padding: 8px 14px;
+        border: none;
+        border-radius: 6px;
+        background-color: rgb(31, 131, 22);
+        color: white;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+
+    .producto-info button:hover {
+        background-color: #333;
+    }
+
+    /* Barra de búsqueda */
+    .barra-busqueda {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .barra-busqueda input {
+        flex: 1;
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+    }
+
+    .barra-busqueda button {
+        margin-left: 10px;
+        padding: 10px 20px;
+        background: linear-gradient(135deg, #60d5a0, #46bea0);
+        color: white;
+        font-weight: 600;
+        font-size: 16px;
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .barra-busqueda button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        background: linear-gradient(135deg, #4cc393, #3fb194);
+    }
+
+    .modal-contenidoprod {
+        display: flex;
+        flex-direction: column;
+        max-height: 90vh;
+        padding: 20px;
+        overflow: hidden;
+    }
+
+    /* Encabezado fijo */
+    .modal-contenidoprod h2 {
+        position: sticky;
+        top: 0;
+        background-color: white;
+        z-index: 3;
+        padding-bottom: 10px;
+    }
+
+    /* Barra de búsqueda fija */
+    .barra-busqueda {
+        position: sticky;
+        top: 48px; /* debajo del h2 */
+        background-color: white;
+        z-index: 2;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    /* Catálogo con scroll */
+    .catalogo-productos {
+        flex: 1;
+        overflow-y: auto;
+        margin-top: 10px;
+        padding-right: 5px;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    /* Modal listado de pedidos */
+    .lista-pedidos {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .pedido-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 10px 14px;
+        margin-bottom: 10px;
+    }
+
+    .pedido-info {
+        font-weight: 500;
+    }
+
+    .pedido-acciones {
+        display: flex;
+        gap: 8px;
+    }
+
+    .pedido-acciones button {
+        padding: 4px 10px;
+        font-size: 14px;
+        border-radius: 6px;
+        cursor: pointer;
+        border: none;
+        transition: background-color 0.2s ease-in-out;
+    }
+
+    .btn-editar {
+        background-color: #e6f4ff;
+        color: #0077b6;
+    }
+
+    .btn-editar:hover {
+        background-color: #cce9ff;
+    }
+
+    .btn-eliminar {
+        background-color: #ffe6e6;
+        color: #d00000;
+    }
+
+    .btn-eliminar:hover {
+        background-color: #ffcccc;
+    }
+
+    .modalses {
+        display: inline-flex;        
+        justify-content: space-around;
+        width: 100%;                 
+        align-items: center;        
+    }
+</style>
+<h1>Mesas</h1>
+
+<div class="mesas-grid">
+    {% for m in mesas %}
+        <div class="mesa-card {% if m.estado == 1 %}mesa-ocupada{% else %}mesa-disponible{% endif %}" 
+            onclick="abrirModalMesa(this)" 
+            data-mesa='{"id": {{ m.id }}, "nombre": "{{ m.nombre|escapejs }}", "estado": {% if m.estado == 1 %}true{% else %}false{% endif %}, "capacidad": {{ m.capacidad }}, "sede": "{{ m.sede|escapejs }}" }'>
+            <div class="mesa-header">
+                <h3>{{ m.nombre }}</h3>
+                <span class="estado-badge">
+                    {% if m.estado == 1 %}🟠 Ocupada{% else %}🟢 Disponible{% endif %}
+                </span>
+            </div>
+            <div class="mesa-body">
+                <p>👥 Capacidad: {{ m.capacidad }}</p>
+                <p>🏢 Sede: {{ m.sede }}</p>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<!-- Modal de Mesa/Pedidos -->
+<div id="modalMesa" class="modal">
+    <div class="modal-contenido">
+        <span class="modal-cerrar" onclick="cerrarModal()">&times;</span>
+        <h2 id="modal-titulo"></h2>
+        <div class="modal-body">
+            <div class="modalses">
+                <p><strong>Estado:</strong> <span id="modal-estado"></span></p>
+                <p><strong>Sede:</strong> <span id="modal-sede"></span></p>
+            </div>
+
+            <h5>📋 Pedidos:</h5>
+            <ul id="lista-pedidos" class="lista-pedidos">
+                <!-- Pedidos cargados dinámicamente con botones -->
+            </ul>
+        </div>
+        <div class="modal-acciones">
+            <button onclick="abrirModalProductos()">➕ Agregar Producto</button>
+            <button id="btn-cancelar" class="btn-cerrar">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Productos -->
+<div id="modalProductos" class="modal">
+    <div class="modal-contenido modal-contenidoprod">
+        <span class="modal-cerrar" onclick="cerrarModalProductos()">&times;</span>
+        <h2>Agregar al Pedido</h2>
+
+        <!-- Barra de búsqueda -->
+        <div class="barra-busqueda">
+            <input type="text" placeholder="Buscar producto...">
+            <button>Buscar</button>
+        </div>
+
+        <!-- Catálogo de productos -->
+        <div class="catalogo-productos">
+            {% for p in productos %}
+                <div class="producto-card">
+                    <div class="producto-info">
+                        <strong>{{ p.nombre }}</strong><br>
+                        <span style="font-size: 18px; color: #000;">${{ p.precio_venta|intcomma }}</span><br>
+                        <small>
+                            Stock: 
+                            {% if p.stock > 0 %}
+                                {{ p.stock }} und
+                            {% else %}
+                                <span style="color: red;">Agotado</span>
+                            {% endif %}
+                        </small>
+                        <br>
+                        <button onclick="agregarProducto({{ p.id }}, '{{ p.nombre|escapejs }}')" style="margin-top: 5px;">Seleccionar</button>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+    const cancelarMesaUrl = "{% url 'cancelar_mesa' %}";
+    let mesaActual = null;
+    const modalMesa = document.getElementById('modalMesa');
+    const modalProductos = document.getElementById('modalProductos');
+    const verPedidosUrl = "{% url 'ver_pedidos' %}";
+
+    // Abre modal de mesa y carga pedidos via AJAX
+    async function abrirModalMesa(elemento) {
+        mesaActual = JSON.parse(elemento.getAttribute('data-mesa'));
+
+        document.getElementById('modal-titulo').textContent = 'Pedido ' + mesaActual.nombre;
+        document.getElementById('modal-estado').textContent = mesaActual.estado ? '🟠 Ocupada' : '🟢 Disponible';
+        document.getElementById('modal-sede').textContent = mesaActual.sede;
+
+        try {
+            const response = await fetch(`${verPedidosUrl}?mesa_id=${mesaActual.id}`);
+            const data = await response.json();
+
+            console.log(data);
+
+            const listaPedidos = document.getElementById('lista-pedidos');
+            listaPedidos.innerHTML = "";
+
+            data.pedidos.forEach(p => {
+                const li = document.createElement('li');
+                li.classList.add('pedido-item');
+
+                const info = document.createElement('span');
+                info.textContent = `${p.producto} (${p.cantidad} und) - $${p.precio}`;
+                info.classList.add('pedido-info');
+
+                const acciones = document.createElement('div');
+                acciones.classList.add('pedido-acciones');
+
+                const btnEditar = document.createElement('button');
+                btnEditar.textContent = "Editar";
+                btnEditar.classList.add('btn-editar');
+                btnEditar.onclick = () => editarPedido(p);
+
+                const btnEliminar = document.createElement('button');
+                btnEliminar.textContent = "Eliminar";
+                btnEliminar.classList.add('btn-eliminar');
+                btnEliminar.onclick = () => eliminarPedido(p);
+
+                acciones.appendChild(btnEditar);
+                acciones.appendChild(btnEliminar);
+
+                li.appendChild(info);
+                li.appendChild(acciones);
+
+                listaPedidos.appendChild(li);
+            });
+
+        } catch (error) {
+            console.error("Error cargando pedidos:", error);
+        }
+
+        modalMesa.style.display = 'block';
+    }
+
+    // Abre modal de productos (ya precargado en el HTML)
+    function abrirModalProductos() {
+        modalProductos.style.display = 'block';
+    }
+
+    // Cierra modales
+    function cerrarModal() {
+        modalMesa.style.display = 'none';
+    }
+    function cerrarModalProductos() {
+        modalProductos.style.display = 'none';
+    }
+
+    // Maneja la cancelación de la mesa (cambiar estado a disponible)
+    document.getElementById("btn-cancelar").addEventListener("click", async function () {
+        if (!mesaActual) return;
+
+        try {
+            const response = await fetch(cancelarMesaUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "X-CSRFToken": getCookie("csrftoken"),
+                },
+                body: `mesa_id=${mesaActual.id}`
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                const mesaElemento = document.querySelector(`.mesa-card[data-mesa*='"id": ${mesaActual.id}']`);
+                if (mesaElemento) {
+                    mesaElemento.classList.remove("mesa-ocupada");
+                    mesaElemento.classList.add("mesa-disponible");
+
+                    const badge = mesaElemento.querySelector(".estado-badge");
+                    if (badge) badge.textContent = "🟢 Disponible";
+                }
+
+                cerrarModal();
+            } else {
+                alert("Error: " + result.error);
+            }
+        } catch (error) {
+            console.error("Error al cancelar mesa:", error);
+            alert("Ocurrió un error al cancelar la mesa.");
+        }
+    });
+
+    // Helper para obtener el CSRF Token desde cookies
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                cookie = cookie.trim();
+                if (cookie.startsWith(name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Agrega producto al pedido de la mesa actual
+    function agregarProducto(productoId, nombreProducto) {
+        if (!mesaActual) {
+            alert("No se ha seleccionado ninguna mesa.");
+            return;
+        }
+
+        const mesaId = mesaActual.id;
+
+        console.log("Agregando producto a mesa:", mesaId);
+
+        fetch("{% url 'agregar_producto' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: `producto_id=${productoId}&mesa_id=${mesaId}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(`${nombreProducto} agregado al pedido`);
+                cerrarModalProductos();
+                abrirModalMesa(document.querySelector(`.mesa-card[data-mesa*='"id": ${mesaId}']`)); // Refresca los datos
+            } else {
+                alert(data.mensaje);
+                console.log(data.mensaje);
+            }
+        });
+    }
+    </script>
+
+{% endblock %}
